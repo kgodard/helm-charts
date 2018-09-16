@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "tripstorm.fullname" . }}-ui-service
+  namespace: {{ .Values.namespace }}
+  {{- template "tripstorm.labels" . }}
+spec:
+  ports:
+  - name: {{ .Values.uiServicePortName }}
+    port: {{ .Values.uiServicePort }}
+    protocol: TCP
+    targetPort: {{ .Values.uiServiceTargetPort }}
+  selector:
+    app: {{ template "tripstorm.name" . }}-ui
+    release: {{ .Release.Name }}
+  type: ClusterIP

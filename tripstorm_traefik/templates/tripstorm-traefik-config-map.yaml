@@ -1,0 +1,38 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "tripstorm_traefik.fullname" . }}-conf
+  namespace: {{ .Values.namespace }}
+data:
+  traefik.toml: |
+    # traefik.toml
+    defaultEntryPoints = ["http","https"]
+    # [traefik-ui]
+    # address = ":8080"
+    #   [web.auth.basic]
+    #   users = ["kgodard:$apr1$9fQMbeYQ$XZ6p11He4hx2ZpBbf/r4J/"]
+
+    [entryPoints]
+      [entryPoints.http]
+      address = ":80"
+        [entryPoints.http.redirect]
+        entryPoint = "https"
+      # [entryPoint.traefik-ui]
+      # address = ":8080"
+      #   [entryPoint.http.redirect]
+      #     entryPoint = "https"
+      [entryPoints.https]
+      address = ":443"
+      [entryPoints.https.tls]
+    [acme]
+      email = "{{ .Values.acmeEmail }}"
+      storage = "{{ .Values.acmeStoragePath }}"
+      entryPoint = "{{ .Values.acmeEntryPoint }}"
+      onHostRule = {{ .Values.acmeOnHostRule }}
+      caServer = "{{ .Values.acmeCaServer }}"
+      acmeLogging = {{ .Values.acmeLogging }}
+    [[acme.domains]]
+      main = "{{ .Values.acmeDomain }}"
+    [acme.httpChallenge]
+      entryPoint = "{{ .Values.acmeHttpChallengeEntryPoint }}"

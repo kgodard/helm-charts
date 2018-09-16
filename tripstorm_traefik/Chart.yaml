@@ -1,0 +1,4 @@
+apiVersion: v1
+description: Customized traefik chart for tripstorm.
+name: tripstorm_traefik
+version: 0.1.0

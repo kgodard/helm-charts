@@ -1,0 +1,22 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "tripstorm_traefik.fullname" . }}-ingress
+  namespace: {{ .Values.ingressNamespace }}
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.frontend.rule.type: PathPrefix
+spec:
+  rules:
+  - host: {{ .Values.fqdn }}
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: {{ .Values.uiServiceName }}
+          servicePort: http
+      - path: /api/
+        backend:
+          serviceName: {{ .Values.apiServiceName }}
+          servicePort: http
+

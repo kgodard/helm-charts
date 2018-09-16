@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "tripstorm.fullname" . }}-external-mysql-service
+  namespace: {{ .Values.namespace }}
+  {{- template "tripstorm.labels" . }}
+spec:
+  ports:
+  - name: {{ .Values.databasePortName }}
+    port: {{ .Values.databasePort }}
+    protocol: {{ .Values.databaseProtocol }}
+    targetPort: {{ .Values.databaseTargetPort }}
+  sessionAffinity: None
+  type: ClusterIP

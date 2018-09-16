@@ -1,0 +1,82 @@
+# Default values for tripstorm.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+# Custom Namespace
+namespace: tripstorm
+
+# Private Registry credentials
+imageCredentials:
+  registry: registry.kimgodard.com
+  username: kgodard
+  password: f00barZ!
+
+# API Image
+apiImage: stormfront_api
+apiImageTag: k8s
+apiImagePullPolicy: IfNotPresent
+apiContainerPort: 4000
+
+# API Service Info
+apiServicePortName: http
+apiServicePort: 4000
+apiServiceTargetPort: 4000
+
+# UI Image
+uiImage: stormfront_ui
+uiImageTag: 21a952e
+uiImagePullPolicy: IfNotPresent
+uiContainerPort: 80
+
+# UI Service Info
+uiServicePortName: http
+uiServicePort: 80
+uiServiceTargetPort: 80
+
+# Application Secrets
+secretKeyBase: 599nnqt5s/Nu1GvNGB9feWIgoXgauSZSUZa3irhcRi1LGAWG8YsBdzD1n4EjdNzp
+dbName: grez_production
+dbUser: grez_user
+dbPassword: P@ssw0rd
+braintreeMerchantId: fpk65xkph96r9b3h
+braintreePublicKey: g9jskv4jwx92kzff
+braintreePrivateKey: 8f630ee6b2928f2104042eb430cee6ad
+
+# Database Port Info
+databasePortName: mysql
+databasePort: 3306
+databaseProtocol: TCP
+databaseTargetPort: 3306
+databaseEndpointIP: 10.134.26.54 # demo grez db
+
+apiReplicaCount: 1
+uiReplicaCount: 1
+
+# service:
+#   name: nginx
+#   type: ClusterIP
+#   externalPort: 80
+#   internalPort: 80
+# ingress:
+#   enabled: false
+#   # Used to create an Ingress record.
+#   hosts:
+#     - chart-example.local
+#   annotations:
+#     # kubernetes.io/ingress.class: nginx
+#     # kubernetes.io/tls-acme: "true"
+#   tls:
+#     # Secrets must be manually created in the namespace.
+#     # - secretName: chart-example-tls
+#     #   hosts:
+#     #     - chart-example.local
+# resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 128Mi

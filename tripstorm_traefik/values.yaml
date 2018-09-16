@@ -1,0 +1,25 @@
+# Default values for tripstorm_traefik.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+#
+# Namespace
+namespace: kube-system
+
+# Traefik image
+imageName: traefik
+
+# acme configuration for letsencrypt
+acmeEmail: "kim.godard@gmail.com"
+acmeStoragePath: "/acme/acme.json"
+acmeEntryPoint: "https"
+acmeOnHostRule: true
+acmeCaServer: "https://acme-staging-v02.api.letsencrypt.org/directory"
+acmeLogging: true
+acmeDomain: "mygrez.com"
+acmeHttpChallengeEntryPoint: "http"
+
+# Ingress
+ingressNamespace: tripstorm
+fqdn: tripstorm.mygrez.com
+uiServiceName: braided-puma-tripstorm-ui-service
+apiServiceName: braided-puma-tripstorm-api-service
