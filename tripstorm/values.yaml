@@ -6,9 +6,9 @@ namespace: tripstorm
 
 # Private Registry credentials
 imageCredentials:
-  registry: registry.kimgodard.com
-  username: kgodard
-  password: f00barZ!
+  registry: REGISTRY_URL
+  username: REGISTRY_USERNAME
+  password: REGISTRY_PASSWORD
 
 # API Image
 apiImage: stormfront_api
@@ -36,7 +36,7 @@ uiServiceTargetPort: 80
 secretKeyBase: 599nnqt5s/Nu1GvNGB9feWIgoXgauSZSUZa3irhcRi1LGAWG8YsBdzD1n4EjdNzp
 dbName: grez_production
 dbUser: grez_user
-dbPassword: P@ssw0rd
+dbPassword: DB_PASSWORD
 braintreeMerchantId: fpk65xkph96r9b3h
 braintreePublicKey: g9jskv4jwx92kzff
 braintreePrivateKey: 8f630ee6b2928f2104042eb430cee6ad
