@@ -1,12 +1,14 @@
+{{ if not .Values.databaseHost -}}
 apiVersion: v1
 kind: Endpoints
 metadata:
   name: {{ template "tripstorm.fullname" . }}-external-mysql-service
-  namespace: {{ .Values.namespace }}
+  namespace: {{ .Release.Namespace }}
   {{- template "tripstorm.labels" . }}
 subsets:
 - addresses:
-  - ip: {{ .Values.databaseEndpointIP }}
+  - ip: {{ required "A databaseEndpointIP is required when using external DB svc!" .Values.databaseEndpointIP }}
   ports:
   - name: {{ .Values.databasePortName }}
     port: {{ .Values.databasePort }}
+{{- end -}}

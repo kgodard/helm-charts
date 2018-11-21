@@ -2,7 +2,7 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: {{ template "tripstorm.fullname" . }}-ui-deployment
-  namespace: {{ .Values.namespace }}
+  namespace: {{ .Release.Namespace }}
   {{- template "tripstorm.labels" . }}
 spec:
   replicas: {{ .Values.uiReplicaCount }}
