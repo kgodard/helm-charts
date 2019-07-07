@@ -64,3 +64,8 @@ spec:
             secretKeyRef:
               name: {{ template "tripstorm.fullname" . }}-secrets
               key: braintree-private-key
+        - name: STRIPE_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "tripstorm.fullname" . }}-secrets
+              key: stripe-api-key

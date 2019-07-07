@@ -42,6 +42,7 @@ dbPassword:
 braintreeMerchantId: fpk65xkph96r9b3h
 braintreePublicKey: g9jskv4jwx92kzff
 braintreePrivateKey: 8f630ee6b2928f2104042eb430cee6ad
+stripeApiKey:
 
 # Database Host
 # PROVIDE THIS UNLESS USING AN EXTERNAL DB SERVICE
