@@ -1,0 +1,26 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "tripstorm.fullname" . }}-ingress
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    certmanager.k8s.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/ingress.class: nginx
+  {{- template "tripstorm.labels" . }}
+spec:
+  tls:
+  - hosts:
+    - {{ .Values.ingressHostName }}
+    secretName: {{ template "tripstorm.fullname" . }}-tls-prod
+  rules:
+  - host: {{ .Values.ingressHostName }}
+    http:
+      paths:
+      - backend:
+          serviceName: {{ template "tripstorm.fullname" . }}-ui-service
+          servicePort: {{ .Values.uiServicePort }}
+        path: /
+      - backend:
+          serviceName: {{ template "tripstorm.fullname" . }}-api-service
+          servicePort: {{ .Values.apiServicePort }}
+        path: /api/
