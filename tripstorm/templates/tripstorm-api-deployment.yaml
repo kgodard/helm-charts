@@ -16,7 +16,7 @@ spec:
         app: {{ template "tripstorm.name" . }}-api
         release: {{ .Release.Name }}
       annotations:
-        timestamp: "{{ .Release.Time.Seconds }}"
+        timestamp: "{{ now | unixEpoch }}"
     spec:
       restartPolicy: Always
       imagePullSecrets:

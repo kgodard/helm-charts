@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "tripstorm.fullname" . }}-ui-deployment
@@ -16,7 +16,7 @@ spec:
         app: {{ template "tripstorm.name" . }}-ui
         release: {{ .Release.Name }}
       annotations:
-        timestamp: "{{ .Release.Time.Seconds }}"
+        timestamp: "{{ now | unixEpoch }}"
     spec:
       restartPolicy: Always
       imagePullSecrets:
