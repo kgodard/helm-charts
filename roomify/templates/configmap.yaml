@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "roomify.name" . }}-config
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "roomify.labels" . | nindent 4 }}
+data:
+  cors_allowed_host: {{ .Values.config.cors_allowed_host }}
+  db_database: {{ .Values.config.db_name }}
+  db_host: {{ .Values.config.db_host }}
+  rails_log_level: {{ .Values.config.rails_log_level }}
+  roomify_root_url: {{ .Values.config.roomify_root_url }}
+  smtp_domain: {{ .Values.config.smtp_domain }}
+  smtp_port: {{ .Values.config.smtp_port | quote }}
+  smtp_server: {{ .Values.config.smtp_server }}
+  system_from_email: {{ .Values.config.system_from_email }}

@@ -1,0 +1,42 @@
+# Default values for roomify.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+config:
+  cors_allowed_host:
+  db_name: roomify_production
+  db_host: roomify-data-postgresql.database
+  rails_log_level: INFO
+  roomify_root_url: https://www.roomify.net/#/
+  smtp_domain: smtp.sendgrid.com
+  smtp_port: "2525"
+  smtp_server: smtp.sendgrid.net
+  system_from_email: no-reply@roomify.net
+
+secrets:
+  db_password:
+  db_user:
+  secret_key_base:
+  smtp_username:
+  smtp_password:
+
+replicaCount: 1
+
+imagePullSecrets:
+
+image:
+  ui:
+    repository: registry.kimgodard.com/roomify_ui
+    tag:
+  api:
+    repository: registry.kimgodard.com/roomify_api
+    tag:
+
+ingress:
+  hosts:
+    - host: www.roomify.net
+  tls:
+    - hosts:
+        - www.roomify.net
+      secretName: www-roomify-net-tls-prod
+

@@ -1,0 +1,125 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "roomify.name" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ include "roomify.name" . }}
+    {{- include "roomify.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "roomify.name" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "roomify.name" . }}
+    spec:
+      containers:
+      - image: "{{ .Values.image.ui.repository }}:{{ .Values.image.ui.tag }}"
+        imagePullPolicy: IfNotPresent
+        name: roomify-ui
+        ports:
+        - containerPort: 80
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /etc/nginx/conf.d
+          name: roomify-nginx-config
+      - command:
+        - sh
+        - -c
+        - |
+          sleep 5; bundle exec rake db:create db:migrate db:seed; bundle exec puma -C config/puma.rb
+        env:
+        - name: RAILS_ENV
+          value: production
+        - name: RACK_ENV
+          value: production
+        - name: SERVE_STATIC_FILES
+          value: "false"
+        - name: RAILS_LOG_STDOUT
+          value: "true"
+        - name: DB_HOST
+          valueFrom:
+            configMapKeyRef:
+              key: db_host
+              name: roomify-config
+        - name: DB_DATABASE
+          valueFrom:
+            configMapKeyRef:
+              key: db_database
+              name: roomify-config
+        - name: CORS_ALLOWED_HOST
+          valueFrom:
+            configMapKeyRef:
+              key: cors_allowed_host
+              name: roomify-config
+        - name: RAILS_LOG_LEVEL
+          valueFrom:
+            configMapKeyRef:
+              key: rails_log_level
+              name: roomify-config
+        - name: ROOMIFY_ROOT_URL
+          valueFrom:
+            configMapKeyRef:
+              key: roomify_root_url
+              name: roomify-config
+        - name: SYSTEM_FROM_EMAIL
+          valueFrom:
+            configMapKeyRef:
+              key: system_from_email
+              name: roomify-config
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              key: db_user
+              name: roomify-secrets
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: db_password
+              name: roomify-secrets
+        - name: SECRET_KEY_BASE
+          valueFrom:
+            secretKeyRef:
+              key: secret_key_base
+              name: roomify-secrets
+        - name: SMTP_SERVER
+          valueFrom:
+            configMapKeyRef:
+              key: smtp_server
+              name: roomify-config
+        - name: SMTP_PORT
+          valueFrom:
+            configMapKeyRef:
+              key: smtp_port
+              name: roomify-config
+        - name: SMTP_DOMAIN
+          valueFrom:
+            configMapKeyRef:
+              key: smtp_domain
+              name: roomify-config
+        - name: SMTP_USERNAME
+          valueFrom:
+            secretKeyRef:
+              key: smtp_username
+              name: roomify-secrets
+        - name: SMTP_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: smtp_password
+              name: roomify-secrets
+        image: "{{ .Values.image.api.repository }}:{{ .Values.image.api.tag }}"
+        imagePullPolicy: Always
+        name: roomify-api
+        ports:
+        - containerPort: 3000
+          protocol: TCP
+      imagePullSecrets:
+      - name: {{ .Values.imagePullSecrets }}
+      restartPolicy: Always
+      volumes:
+      - configMap:
+          name: roomify-nginx-config
+        name: roomify-nginx-config
