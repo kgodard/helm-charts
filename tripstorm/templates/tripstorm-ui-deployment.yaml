@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "tripstorm.fullname" . }}-ui-deployment
+  name: {{ template "tripstorm.name" . }}-ui
   namespace: {{ .Release.Namespace }}
   {{- template "tripstorm.labels" . }}
 spec:
@@ -20,7 +20,7 @@ spec:
     spec:
       restartPolicy: Always
       imagePullSecrets:
-      - name: {{ template "tripstorm.fullname" . }}-image-pull-secret
+      - name: {{ template "tripstorm.name" . }}-image-pull-secret
       containers:
       - name: {{ template "tripstorm.name" . }}-ui
         image: {{ .Values.imageCredentials.registry }}/{{ .Values.uiImage }}:{{ .Values.uiImageTag }}

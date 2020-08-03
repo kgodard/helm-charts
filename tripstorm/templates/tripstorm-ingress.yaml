@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
-  name: {{ template "tripstorm.fullname" . }}-ingress
+  name: {{ template "tripstorm.name" . }}-ingress
   namespace: {{ .Release.Namespace }}
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
@@ -11,16 +11,16 @@ spec:
   tls:
   - hosts:
     - {{ .Values.ingressHostName }}
-    secretName: {{ template "tripstorm.fullname" . }}-tls-prod
+    secretName: {{ template "tripstorm.name" . }}-tls-prod
   rules:
   - host: {{ .Values.ingressHostName }}
     http:
       paths:
       - backend:
-          serviceName: {{ template "tripstorm.fullname" . }}-ui-service
+          serviceName: {{ template "tripstorm.name" . }}-ui-service
           servicePort: {{ .Values.uiServicePort }}
         path: /
       - backend:
-          serviceName: {{ template "tripstorm.fullname" . }}-api-service
+          serviceName: {{ template "tripstorm.name" . }}-api-service
           servicePort: {{ .Values.apiServicePort }}
         path: /api/
