@@ -1,0 +1,23 @@
+apiVersion: cert-manager.io/v1alpha2
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-prod
+  namespace: {{ .Values.clusterissuer.namespace }}
+  labels:
+    {{- include "grez.labels" . | nindent 4 }}
+  annotations:
+    # it won't work without this annotation!!
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-1"
+spec:
+  acme:
+    email: {{ .Values.clusterissuer.acme.email }}
+    server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: letsencrypt-prod
+    solvers:
+    - http01:
+        ingress:
+          class: nginx
+

@@ -1,0 +1,4 @@
+GREZ requires the following:
+* cert-manager
+* NFS-server-provisioner (storage class) with ~ 10Gi PVC block storage
+* MYSQL database

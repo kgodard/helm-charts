@@ -1,0 +1,61 @@
+# Default values for grez.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+cronjob:
+  dbBackup:
+    schedule: "0 1 * * *"
+  tripstormProcessor:
+    schedule: "*/5 * * * *"
+  orphanNotifier:
+    schedule: "0 5 * * 1,3"
+
+image:
+  repository: registry.kimgodard.com/grez
+  tag:
+
+imagePullSecrets:
+
+replicaCount: 1
+
+ingress:
+  hosts:
+    - host: example
+  tls:
+    - hosts:
+        - example
+      secretName: example-tls-prod
+
+config:
+  mysql_database: grez_production
+  mysql_host: grez-data-mysql.database
+  rooms_uri: https://roomify.tripstorm.app/api/
+  smtp_domain: smtp.sendgrid.com
+  smtp_port: "2525"
+  smtp_server: smtp.sendgrid.net
+  stale_reservation_minutes: "2"
+  tripstorm_base_url: https://go.tripstorm.app/#!/
+  tripstorm_my_trips_path: final-payments
+
+clusterissuer:
+  namespace: cert-manager
+  acme:
+    email:
+
+secrets:
+  mysql_password:
+  mysql_username:
+  paypal_pass:
+  paypal_user:
+  rooms_password:
+  rooms_username:
+  smtp_password:
+  smtp_username:
+
+pvc:
+  storageClassName: "nfs"
+  storageSize: 4Gi
+
+fileSecrets:
+  paypal_production_cert:
+

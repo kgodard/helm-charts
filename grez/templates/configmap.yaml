@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "grez.name" . }}-config
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "grez.labels" . | nindent 4 }}
+data:
+  mysql_database: {{ .Values.config.mysql_database }}
+  mysql_host: {{ .Values.config.mysql_host }}
+  rooms_uri: {{ .Values.config.rooms_uri }}
+  smtp_domain: {{ .Values.config.smtp_domain }}
+  smtp_port: {{ .Values.config.smtp_port | quote }}
+  smtp_server: {{ .Values.config.smtp_server }}
+  stale_reservation_minutes: {{ .Values.config.stale_reservation_minutes | quote }}
+  stormfront_base_url: {{ .Values.config.tripstorm_base_url }}
+  stormfront_my_trips_path: {{ .Values.config.tripstorm_my_trips_path }}
+

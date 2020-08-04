@@ -1,0 +1,130 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ include "grez.name" . }}-tripstorm-processor
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "grez.labels" . | nindent 4 }}
+spec:
+  schedule: "{{ .Values.cronjob.tripstormProcessor.schedule }}"
+  concurrencyPolicy: Forbid
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - command:
+            - /bin/bash
+            - -c
+            - >
+               docker/app/docker-entrypoint.d/01-create-symlinks;
+               .rbenv/shims/bundle exec rake stormfront:process_reservations
+               RAILS_ENV=production
+            env:
+            - name: MYSQL_HOST
+              valueFrom:
+                configMapKeyRef:
+                  key: mysql_host
+                  name: {{ include "grez.name" . }}-config
+            - name: MYSQL_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  key: mysql_database
+                  name: {{ include "grez.name" . }}-config
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  key: mysql_username
+                  name: {{ include "grez.name" . }}-secrets
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: mysql_password
+                  name: {{ include "grez.name" . }}-secrets
+            - name: RAILS_ENV
+              value: production
+            - name: SMTP_SERVER
+              valueFrom:
+                configMapKeyRef:
+                  key: smtp_server
+                  name: {{ include "grez.name" . }}-config
+            - name: SMTP_PORT
+              valueFrom:
+                configMapKeyRef:
+                  key: smtp_port
+                  name: {{ include "grez.name" . }}-config
+            - name: SMTP_DOMAIN
+              valueFrom:
+                configMapKeyRef:
+                  key: smtp_domain
+                  name: {{ include "grez.name" . }}-config
+            - name: SMTP_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  key: smtp_username
+                  name: {{ include "grez.name" . }}-secrets
+            - name: SMTP_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: smtp_password
+                  name: {{ include "grez.name" . }}-secrets
+            - name: PAYPAL_USER
+              valueFrom:
+                secretKeyRef:
+                  key: paypal_user
+                  name: {{ include "grez.name" . }}-secrets
+            - name: PAYPAL_PASS
+              valueFrom:
+                secretKeyRef:
+                  key: paypal_pass
+                  name: {{ include "grez.name" . }}-secrets
+            - name: ROOMS_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  key: rooms_username
+                  name: {{ include "grez.name" . }}-secrets
+            - name: ROOMS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: rooms_password
+                  name: {{ include "grez.name" . }}-secrets
+            - name: STORMFRONT_BASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: stormfront_base_url
+                  name: {{ include "grez.name" . }}-config
+            - name: STORMFRONT_MY_TRIPS_PATH
+              valueFrom:
+                configMapKeyRef:
+                  key: stormfront_my_trips_path
+                  name: {{ include "grez.name" . }}-config
+            - name: STALE_RESERVATION_MINUTES
+              valueFrom:
+                configMapKeyRef:
+                  key: stale_reservation_minutes
+                  name: {{ include "grez.name" . }}-config
+            - name: ROOMS_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: rooms_uri
+                  name: {{ include "grez.name" . }}-config
+            image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+            imagePullPolicy: IfNotPresent
+            name: {{ include "grez.name" . }}-cronjob
+            volumeMounts:
+            - mountPath: /app/public/assets
+              name: {{ include "grez.name" . }}-assets
+            - mountPath: /app/config/secrets
+              name: {{ include "grez.name" . }}-file-secrets
+          imagePullSecrets:
+          - name: {{ .Values.imagePullSecrets }}
+          restartPolicy: Never
+          volumes:
+          - name: {{ include "grez.name" . }}-assets
+            persistentVolumeClaim:
+              claimName: {{ include "grez.name" . }}-nfs-assets
+          - name: {{ include "grez.name" . }}-file-secrets
+            secret:
+              secretName: {{ include "grez.name" . }}-file-secrets
+
