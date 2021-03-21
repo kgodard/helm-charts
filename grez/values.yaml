@@ -7,8 +7,6 @@ cronjob:
     schedule: "0 1 * * *"
   tripstormProcessor:
     schedule: "*/5 * * * *"
-  orphanNotifier:
-    schedule: "0 5 * * 1,3"
 
 image:
   repository: registry.kimgodard.com/grez
@@ -33,7 +31,7 @@ config:
   smtp_domain: smtp.sendgrid.com
   smtp_port: "2525"
   smtp_server: smtp.sendgrid.net
-  stale_reservation_minutes: "2"
+  stale_reservation_minutes: "20"
   tripstorm_base_url: https://go.tripstorm.app/#!/
   tripstorm_my_trips_path: final-payments
 

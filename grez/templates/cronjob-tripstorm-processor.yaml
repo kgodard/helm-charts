@@ -20,6 +20,7 @@ spec:
             - >
                docker/app/docker-entrypoint.d/01-create-symlinks;
                .rbenv/shims/bundle exec rake stormfront:process_reservations
+               stormfront:destroy_stale_unpaid_reservations
                RAILS_ENV=production
             env:
             - name: MYSQL_HOST
