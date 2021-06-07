@@ -27,6 +27,8 @@ data:
 
         access_log  /var/log/nginx/access.log  main;
 
+        client_max_body_size 20m;
+
         sendfile        on;
         keepalive_timeout  65;
 
