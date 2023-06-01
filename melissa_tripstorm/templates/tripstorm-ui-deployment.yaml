@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "tripstorm.name" . }}-ui
+  namespace: {{ .Release.Namespace }}
+  {{- template "tripstorm.labels" . }}
+spec:
+  replicas: {{ .Values.uiReplicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "tripstorm.name" . }}-ui
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "tripstorm.name" . }}-ui
+        release: {{ .Release.Name }}
+      annotations:
+        timestamp: "{{ now | unixEpoch }}"
+    spec:
+      restartPolicy: Always
+      imagePullSecrets:
+      - name: {{ template "tripstorm.name" . }}-image-pull-secret
+      containers:
+      - name: {{ template "tripstorm.name" . }}-ui
+        image: {{ .Values.imageCredentials.registry }}/{{ .Values.uiImage }}:{{ .Values.uiImageTag }}
+        imagePullPolicy: {{ .Values.uiImagePullPolicy }}
+        ports:
+        - containerPort: {{ .Values.uiContainerPort }}
+          protocol: TCP

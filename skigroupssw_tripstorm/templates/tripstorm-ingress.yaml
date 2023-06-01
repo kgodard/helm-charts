@@ -1,0 +1,32 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ template "tripstorm.name" . }}-ingress
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+  {{- template "tripstorm.labels" . }}
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - {{ .Values.ingressHostName }}
+    secretName: {{ template "tripstorm.name" . }}-tls-prod
+  rules:
+  - host: {{ .Values.ingressHostName }}
+    http:
+      paths:
+      - backend:
+          service:
+            name: {{ template "tripstorm.name" . }}-ui-service
+            port:
+              number: {{ .Values.uiServicePort }}
+        path: /
+        pathType: ImplementationSpecific
+      - backend:
+          service:
+            name: {{ template "tripstorm.name" . }}-api-service
+            port:
+              number: {{ .Values.apiServicePort }}
+        path: /api/
+        pathType: ImplementationSpecific

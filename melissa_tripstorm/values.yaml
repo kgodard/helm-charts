@@ -1,0 +1,59 @@
+# Default values for tripstorm.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+#
+# REQUIRED: TRIPSTORM DOMAIN NAME
+ingressHostName:
+
+# REQUIRED: Private Registry credentials
+imageCredentials:
+  registry:
+  username: false
+  password: false
+
+# API Image
+apiImage: stormfront_api
+apiImageTag: k8s
+apiImagePullPolicy: IfNotPresent
+apiContainerPort: 4000
+
+# API Service Info
+apiServicePortName: http
+apiServicePort: 4000
+apiServiceTargetPort: 4000
+
+# UI Image
+uiImage: stormfront_ui
+uiImageTag: 21a952e
+uiImagePullPolicy: IfNotPresent
+uiContainerPort: 80
+
+# UI Service Info
+uiServicePortName: http
+uiServicePort: 80
+uiServiceTargetPort: 80
+
+# Application Secrets
+# TODO: change these to blank required values
+secretKeyBase: 599nnqt5s/Nu1GvNGB9feWIgoXgauSZSUZa3irhcRi1LGAWG8YsBdzD1n4EjdNzp
+dbName: grez_production
+dbUser: grez_user
+dbPassword:
+braintreeMerchantId: fpk65xkph96r9b3h
+braintreePublicKey: g9jskv4jwx92kzff
+braintreePrivateKey: 8f630ee6b2928f2104042eb430cee6ad
+stripeApiKey:
+
+# Database Host
+# PROVIDE THIS UNLESS USING AN EXTERNAL DB SERVICE
+databaseHost: false
+
+# Database Port Info
+databasePortName: mysql
+databasePort: 3306
+databaseProtocol: TCP
+databaseTargetPort: 3306
+databaseEndpointIP:
+
+apiReplicaCount: 1
+uiReplicaCount: 1

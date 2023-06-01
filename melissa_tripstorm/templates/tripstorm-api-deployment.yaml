@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "tripstorm.name" . }}-api
+  namespace: {{ .Release.Namespace }}
+  {{- template "tripstorm.labels" . }}
+spec:
+  replicas: {{ .Values.apiReplicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "tripstorm.name" . }}-api
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "tripstorm.name" . }}-api
+        release: {{ .Release.Name }}
+      annotations:
+        timestamp: "{{ now | unixEpoch }}"
+    spec:
+      restartPolicy: Always
+      imagePullSecrets:
+      - name: {{ template "tripstorm.name" . }}-image-pull-secret
+      containers:
+      - name: {{ template "tripstorm.name" . }}-api
+        image: {{ required "An imageCredentials.registry is required!" .Values.imageCredentials.registry }}/{{ .Values.apiImage }}:{{ .Values.apiImageTag }}
+        imagePullPolicy: {{ .Values.apiImagePullPolicy }}
+        ports:
+        - containerPort: {{ .Values.apiContainerPort }}
+          protocol: TCP
+        env:
+        - name: SECRET_KEY_BASE
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "tripstorm.name" . }}-secrets
+              key: secret-key-base
+        - name: DB_HOST
+          value: {{ if (.Values.databaseHost) }}{{ .Values.databaseHost }}{{ else }}{{ template "tripstorm.name" . }}-external-mysql-service{{ end }}
+        - name: DB_NAME
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "tripstorm.name" . }}-secrets
+              key: db-name
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "tripstorm.name" . }}-secrets
+              key: db-user
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "tripstorm.name" . }}-secrets
+              key: db-password
+        - name: BRAINTREE_MERCHANT_ID
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "tripstorm.name" . }}-secrets
+              key: braintree-merchant-id
+        - name: BRAINTREE_PUBLIC_KEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "tripstorm.name" . }}-secrets
+              key: braintree-public-key
+        - name: BRAINTREE_PRIVATE_KEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "tripstorm.name" . }}-secrets
+              key: braintree-private-key
+        - name: STRIPE_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "tripstorm.name" . }}-secrets
+              key: stripe-api-key
